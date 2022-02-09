@@ -3,11 +3,11 @@ import { createUnplugin } from "unplugin";
 import { parseComponent } from "vue-template-compiler";
 import { Options } from "./types";
 
-export default createUnplugin<Options>(() => ({
+export const unplugin = createUnplugin<Options>(() => ({
   name: "unplugin-vue-script-name",
   enforce: "pre",
   transformInclude(id) {
-    return id.endsWith(".vue");
+    return /\.vue$/.test(id) || /\.vue\?vue/.test(id);
   },
   transform(code, id) {
     var component = parseComponent(code);
@@ -23,3 +23,5 @@ export default createUnplugin<Options>(() => ({
     // return { code };
   }
 }));
+
+export default unplugin;
