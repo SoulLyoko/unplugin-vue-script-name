@@ -2,7 +2,7 @@
   "env": {
     "jest": true
   },
-  "extends": ["@antfu"],
+  // "extends": ["@antfu"],
   "plugins": ["jest"],
   "rules": {}
 }

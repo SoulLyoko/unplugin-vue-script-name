@@ -1,12 +1,25 @@
-import { createUnplugin } from 'unplugin'
-import { Options } from './types'
+import { createUnplugin } from "unplugin";
+// import { parse, compileScript } from '@vue/compiler-sfc'
+import { parseComponent } from "vue-template-compiler";
+import { Options } from "./types";
 
-export default createUnplugin<Options>(options => ({
-  name: 'unplugin-starter',
+export default createUnplugin<Options>(() => ({
+  name: "unplugin-vue-script-name",
+  enforce: "pre",
   transformInclude(id) {
-    return id.endsWith('main.ts')
+    return id.endsWith(".vue");
   },
-  transform(code) {
-    return code.replace('__UNPLUGIN__', `Hello Unplugin! ${options}`)
-  },
-}))
+  transform(code, id) {
+    var component = parseComponent(code);
+    var { setup, name } = component.script?.attrs || {};
+    if (!(setup && name)) return;
+    code = `<script>export default { name: "${name}" }</script>\n${code}`;
+    return { code };
+    // const { descriptor } = parse(code);
+    // const script = compileScript(descriptor, { id });
+    // const { name } = script.attrs;
+    // if (!(descriptor.scriptSetup && name)) return;
+    // code = `<script>export default { name: "${name}" }</script>\n${code}`;
+    // return { code };
+  }
+}));
