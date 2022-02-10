@@ -109,7 +109,9 @@ module.exports = {
 ```html
 <!-- MyComponent.vue -->
 <script setup lang="ts" name="MyComponent">
-  const title = "Component Title";
+  defineProps({
+    title: { type: String }
+  });
 </script>
 
 <template>
