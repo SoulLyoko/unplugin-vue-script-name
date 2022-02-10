@@ -2,27 +2,12 @@
 
 [![NPM version](https://img.shields.io/npm/v/unplugin-vue-script-name?color=a1b858&label=)](https://www.npmjs.com/package/unplugin-vue-script-name)
 
-Starter template for [unplugin](https://github.com/unjs/unplugin).
-
-## Template Usage
-
-To use this template, clone it down using:
-
-```bash
-npx degit antfu/unplugin-vue-script-name my-unplugin
-```
-
-And do a global replace of `unplugin-vue-script-name` with your plugin name.
-
-Then you can start developing your unplugin 🔥
-
-To test your plugin, run: `pnpm run dev`
-To release a new version, run: `pnpm run release`
+Support `<script name>` for Vue script setup.
 
 ## Install
 
 ```bash
-npm i unplugin-vue-script-name
+npm i -D unplugin-vue-script-name
 ```
 
 <details>
@@ -30,13 +15,15 @@ npm i unplugin-vue-script-name
 
 ```ts
 // vite.config.ts
-import Starter from 'unplugin-vue-script-name/vite'
+import scriptName from "unplugin-vue-script-name/vite";
 
 export default defineConfig({
   plugins: [
-    Starter({ /* options */ }),
-  ],
-})
+    scriptName({
+      /* options */
+    })
+  ]
+});
 ```
 
 Example: [`playground/`](./playground/)
@@ -48,17 +35,18 @@ Example: [`playground/`](./playground/)
 
 ```ts
 // rollup.config.js
-import Starter from 'unplugin-vue-script-name/rollup'
+import scriptName from "unplugin-vue-script-name/rollup";
 
 export default {
   plugins: [
-    Starter({ /* options */ }),
-  ],
-}
+    scriptName({
+      /* options */
+    })
+  ]
+};
 ```
 
 <br></details>
-
 
 <details>
 <summary>Webpack</summary><br>
@@ -68,9 +56,11 @@ export default {
 module.exports = {
   /* ... */
   plugins: [
-    require('unplugin-vue-script-name/webpack')({ /* options */ })
+    require("unplugin-vue-script-name/webpack").default({
+      /* options */
+    })
   ]
-}
+};
 ```
 
 <br></details>
@@ -82,9 +72,14 @@ module.exports = {
 // nuxt.config.js
 export default {
   buildModules: [
-    ['unplugin-vue-script-name/nuxt', { /* options */ }],
-  ],
-}
+    [
+      "unplugin-vue-script-name/nuxt",
+      {
+        /* options */
+      }
+    ]
+  ]
+};
 ```
 
 > This module works for both Nuxt 2 and [Nuxt Vite](https://github.com/nuxt/vite)
@@ -99,10 +94,42 @@ export default {
 module.exports = {
   configureWebpack: {
     plugins: [
-      require('unplugin-vue-script-name/webpack')({ /* options */ }),
-    ],
-  },
-}
+      require("unplugin-vue-script-name/webpack").default({
+        /* options */
+      })
+    ]
+  }
+};
 ```
 
 <br></details>
+
+## How It Works
+
+```html
+<!-- MyComponent.vue -->
+<script setup lang="ts" name="MyComponent">
+  const title = "Component Title";
+</script>
+
+<template>
+  <h1>{{title}}</h1>
+</template>
+```
+
+```html
+<!-- Will be transformed to -->
+<script>
+  export default { name: "MyComponent" };
+</script>
+
+<script setup lang="ts">
+  defineProps({
+    title: { type: String }
+  });
+</script>
+
+<template>
+  <h1>{{title}}</h1>
+</template>
+```
