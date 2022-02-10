@@ -1,6 +1,6 @@
 {
   "name": "unplugin-vue-script-name",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Support <script name> for Vue script setup",
   "keywords": [
     "vue",
