@@ -3,6 +3,8 @@ import { createUnplugin } from "unplugin";
 import { parseComponent } from "vue-template-compiler";
 import { Options } from "./types";
 
+const SETUP_COMPILED_STR = "export default __sfc_main";
+
 export const unplugin = createUnplugin<Options>(() => ({
   name: "unplugin-vue-script-name",
   enforce: "pre",
@@ -13,14 +15,13 @@ export const unplugin = createUnplugin<Options>(() => ({
     const component = parseComponent(code);
     const { attrs, content } = component.script || {};
     const { setup, name, lang } = attrs || {};
-    const setupCompiledStr = "export default __sfc_main";
     if (setup && name) {
       // before compile setup
       const scriptLang = lang ? `lang="${lang}"` : "";
       code = `<script ${scriptLang}>\nexport default { name: "${name}" };\n</script>\n${code}`;
-    } else if (name && content?.includes(setupCompiledStr)) {
+    } else if (name && content?.includes(SETUP_COMPILED_STR)) {
       // after vue2-script-setup
-      code = code.replace(setupCompiledStr, `__sfc_main.name = "${name}";\n${setupCompiledStr}`);
+      code = code.replace(SETUP_COMPILED_STR, `__sfc_main.name = "${name}";\n${SETUP_COMPILED_STR}`);
     }
     return { code };
     // const { descriptor } = parse(code);
