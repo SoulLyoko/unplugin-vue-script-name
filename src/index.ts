@@ -23,7 +23,10 @@ export const unplugin = createUnplugin<Options>(() => ({
       // after vue2-script-setup
       code = code.replace(SETUP_COMPILED_STR, `__sfc_main.name = "${name}";\n${SETUP_COMPILED_STR}`);
     }
-    return { code };
+    return {
+      code,
+      map: null
+    };
     // const { descriptor } = parse(code);
     // const script = compileScript(descriptor, { id });
     // const { name } = script.attrs;
